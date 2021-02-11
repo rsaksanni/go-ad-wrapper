@@ -26,7 +26,6 @@ func TestExpiry(t *testing.T) {
 	if err != nil {
 		t.Fatal("Error connecting to server:", err)
 	}
-	defer conn.Conn.Close()
 
 	if expired, _ := conn.IsAccountExpired(testConfig.BindUPN); expired != false {
 		t.Error("IsAccountExpired: Expected false while account is never expired")

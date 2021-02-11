@@ -1,11 +1,11 @@
 package ldap
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestConnSearchOne(t *testing.T) {
+// TestExpiry func
+func TestExpiry(t *testing.T) {
 	if testConfig.Server == "" {
 		t.Skip("ADTEST_SERVER not set")
 		return
@@ -28,17 +28,7 @@ func TestConnSearchOne(t *testing.T) {
 	}
 	defer conn.Conn.Close()
 
-	status, err := conn.Bind(testConfig.BindUPN, testConfig.BindPass)
-	if err != nil {
-		t.Fatal("Error binding to server:", err)
+	if expired, _ := conn.IsAccountExpired(testConfig.BindUPN); expired != false {
+		t.Error("IsAccountExpired: Expected false while account is never expired")
 	}
-
-	if !status {
-		t.Fatal("Error binding to server: invalid credentials")
-	}
-
-	if _, err = conn.SearchOne(fmt.Sprintf("(userPrincipalName=%s)", testConfig.BindUPN), []string{}); err != nil {
-		t.Error("SearchOne: valid search: Expected err to be nil but got:", err)
-	}
-
 }
